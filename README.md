@@ -15,7 +15,7 @@ The repository implements following semi-supervised deep learning methods:
 
 ### The environment:
 
-- Ubuntu 16.04
+- Ubuntu 16.04 + CUDA 9.0
 
 - Python 3.6.5:: Anaconda
 
@@ -23,7 +23,7 @@ The repository implements following semi-supervised deep learning methods:
 
 ### To run the code:
 
-The script *run.sh* includes examples. You can try it as follow:
+The script *run.sh* includes some examples. You can try it as follow:
 
 ```shell
 bash run.sh [gpu_id]
