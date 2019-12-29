@@ -80,7 +80,10 @@ def cifar100(n_labels, data_root='./data-local/cifar100/'):
     channel_stats = dict(mean = [0.5071, 0.4867, 0.4408],
                          std = [0.2675, 0.2565, 0.2761])
     train_transform = transforms.Compose([
-        RandomTranslateWithReflect(4),
+        transforms.Pad(2, padding_mode='reflect'),
+        transforms.ColorJitter(brightness=0.4, contrast=0.4,
+                               saturation=0.4, hue=0.1),
+        transforms.RandomCrop(32),
         transforms.RandomHorizontalFlip(),
         transforms.ToTensor(),
         transforms.Normalize(**channel_stats)
