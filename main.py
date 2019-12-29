@@ -126,7 +126,7 @@ def run(config):
     print("pytorch version : {}".format(torch.__version__))
     ## create save directory
     if config.save_freq!=0 and not os.path.exists(config.save_dir):
-        os.mkdirs(config.save_dir)
+        os.makedirs(config.save_dir)
     ## prepare data
     data_path = os.path.join(config.data_root, config.dataset)
     dconfig   = datasets.load[config.dataset](config.num_labels, data_path)
