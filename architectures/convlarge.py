@@ -86,5 +86,5 @@ def test():
     x = torch.randn(2,3,32,32)
     for net in [convLarge(10)]:
         print(net)
-        y,_ = net(x)
+        y = net(x)
         print(y.size())
