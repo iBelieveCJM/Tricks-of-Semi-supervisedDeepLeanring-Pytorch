@@ -44,7 +44,7 @@
 ##########################################################
 ##=== PIv1 ===
 # cifar10-4k
-CUDA_VISIBLE_DEVICES=$1 python main.py --dataset=cifar10 --sup-batch-size=64 --usp-batch-size=64 --num-labels=4000 --arch=cnn13 --model=piv1 --usp-weight=30.0 --drop-ratio=0.5 --optim=sgd --epochs=400 --lr=0.1 --momentum=0.9 --weight-decay=5e-4 --nesterov=True --lr-scheduler=exp-warmup --min-lr=1e-4 --rampup-length=80 --rampdown-length=50 --data-twice=True --save-freq=100 2>&1 | tee results/piv1_cifar10-4k_$(date +%y-%m-%d-%H-%M).txt
+#CUDA_VISIBLE_DEVICES=$1 python main.py --dataset=cifar10 --sup-batch-size=64 --usp-batch-size=64 --num-labels=4000 --arch=cnn13 --model=piv1 --usp-weight=30.0 --drop-ratio=0.5 --optim=sgd --epochs=400 --lr=0.1 --momentum=0.9 --weight-decay=5e-4 --nesterov=True --lr-scheduler=exp-warmup --min-lr=1e-4 --rampup-length=80 --rampdown-length=50 --data-twice=True --save-freq=100 2>&1 | tee results/piv1_cifar10-4k_$(date +%y-%m-%d-%H-%M).txt
 
 ##=== PIv2 ===
 # cifar10-4k
@@ -84,4 +84,4 @@ CUDA_VISIBLE_DEVICES=$1 python main.py --dataset=cifar10 --sup-batch-size=64 --u
 
 ##=== MixMatchv2 ===
 # cifar10-4k
-#CUDA_VISIBLE_DEVICES=$1 python main.py --dataset=cifar10 --sup-batch-size=100 --usp-batch-size=100 --label-exclude=False --num-labels=4000 --arch=cnn13 --model=mixmatch --usp-weight=30.0 --mixup-alpha=1.0 --ema-decay=0.97 --optim=sgd --epochs=400 --lr=0.1 --momentum=0.9 --weight-decay=5e-4 --nesterov=True --lr-scheduler=cos --min-lr=1e-4 --rampup-length=80 --rampdown-length=50 --data-twice=True --save-freq=0 2>&1 | tee results/mixmatchv2_cifar10-4k_$(date +%y-%m-%d-%H-%M).txt
+CUDA_VISIBLE_DEVICES=$1 python main.py --dataset=cifar10 --sup-batch-size=100 --usp-batch-size=100 --label-exclude=False --num-labels=4000 --arch=cnn13 --model=mixmatch --usp-weight=30.0 --mixup-alpha=1.0 --ema-decay=0.97 --optim=sgd --epochs=400 --lr=0.1 --momentum=0.9 --weight-decay=5e-4 --nesterov=True --lr-scheduler=cos --min-lr=1e-4 --rampup-length=80 --rampdown-length=50 --data-twice=True --save-freq=0 2>&1 | tee results/mixmatchv2_cifar10-4k_$(date +%y-%m-%d-%H-%M).txt
