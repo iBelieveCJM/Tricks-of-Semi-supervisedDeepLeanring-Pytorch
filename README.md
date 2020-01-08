@@ -32,7 +32,7 @@ bash run.sh [gpu_id]
 
 ### Some experimental results:
 
-I haven't run all models in this repository. Some results of this repo. are shown in *./results* directory. And the following results came from this repository and the old codes which this repo. built on.
+I haven't run all models in this repository. Some results of this repo. are shown in *results* directory. And the following results came from this repository and the old codes which this repo. built on.
 
 The following table shows the error rates of the CIFAR10 experiment with 4000 labeled training samples. The parameter settings are the same with the examples in *run.sh*.
 
@@ -40,7 +40,7 @@ The following table shows the error rates of the CIFAR10 experiment with 4000 la
 |------- | ---------------- | ---------------- | -------- | -------- | ------| ----------- | ----- | -------- |
 |orginal |                  |                  |          | 12.16    | 13.20 | 12.31       | 7.29  | 6.24     |
 | v1     | 20.03            | 12.03            | 10.98    | 10.74    | 14.11 | 10.59       | 7.12  | 6.70     |
-| v2     | 15.82            | 10.82            | 13.53    | 10.24    |       |  9.46       | 6.74  | 6.89     |
+| v2     | 15.82            | 10.82            | 13.53    | 10.24    | 12.89 |  9.46       | 6.74  | 6.89     |
 
 
 Note:
