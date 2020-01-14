@@ -29,7 +29,8 @@ build_model = {
     'itempensv2': iTempensv2.Trainer,
     'ictv1': ICTv1.Trainer,
     'ictv2': ICTv2.Trainer,
-    'mixmatch': MixMatch.Trainer
+    'mixmatch': MixMatch.Trainer,
+    'emixpslabv2': eMixPseudoLabelv2.Trainer,
 }
 
 def create_loaders_v1(trainset, evalset, label_idxs, unlab_idxs,

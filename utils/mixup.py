@@ -36,11 +36,21 @@ def mixup_two_targets(x, y, alpha=1.0, device='cuda', is_bias=False):
     return mixed_x, y_a, y_b, lam
 
 
-def mixup_loss_soft(preds, targets_a, targets_b, lam):
+def mixup_ce_loss_soft(preds, targets_a, targets_b, lam):
     """ mixed categorical cross-entropy loss for soft labels
     """
     mixup_loss_a = -torch.mean(torch.sum(targets_a* F.log_softmax(preds, dim=1), dim=1))
     mixup_loss_b = -torch.mean(torch.sum(targets_b* F.log_softmax(preds, dim=1), dim=1))
+
+    mixup_loss = lam* mixup_loss_a + (1- lam)* mixup_loss_b
+    return mixup_loss
+
+
+def mixup_ce_loss_hard(preds, targets_a, targets_b, lam):
+    """ mixed categorical cross-entropy loss
+    """
+    mixup_loss_a = F.nll_loss(F.log_softmax(preds, dim=1), targets_a)
+    mixup_loss_b = F.nll_loss(F.log_softmax(preds, dim=1), targets_b)
 
     mixup_loss = lam* mixup_loss_a + (1- lam)* mixup_loss_b
     return mixup_loss
