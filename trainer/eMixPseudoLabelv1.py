@@ -9,6 +9,7 @@ from collections import defaultdict
 
 from utils.loss import softmax_loss_mean
 from utils.loss import one_hot
+from utils.mixup import *
 from utils.ramps import exp_rampup, pseudo_rampup
 from utils.datasets import decode_label
 from utils.data_utils import NO_LABEL
@@ -18,7 +19,7 @@ from pdb import set_trace
 class Trainer:
 
     def __init__(self, model, optimizer, device, config):
-        print('Pseudo-Label-v1 2013 with {} epoch pseudo labels'.format(
+        print('MixUp-Pseudo-Label-v1 with {} epoch pseudo labels'.format(
               'soft' if config.soft else 'hard'))
         self.model     = model
         self.optimizer = optimizer
@@ -27,6 +28,7 @@ class Trainer:
                           config.dataset, config.num_labels,
                           datetime.datetime.now().strftime("%Y-%m-%d-%H-%M"))
         self.save_dir  = os.path.join(config.save_dir, self.save_dir)
+        self.alpha       = config.mixup_alpha
         self.usp_weight  = config.usp_weight
         #self.rampup      = pseudo_rampup(config.t1, config.t2)
         self.rampup      = exp_rampup(config.weight_rampup)
@@ -35,8 +37,9 @@ class Trainer:
         self.device      = device
         self.epoch       = 0
         self.soft        = config.soft
-        self.unlab_loss  = softmax_loss_mean if self.soft else self.ce_loss
-        
+        self.mixup_loss  = mixup_ce_loss_with_softmax #mixup_mse_loss_with_softmax
+        if not self.soft: self.mixup_loss = mixup_ce_loss_hard
+ 
     def train_iteration(self, data_loader, print_freq):
         loop_info = defaultdict(list)
         label_n, unlab_n = 0, 0
@@ -52,10 +55,15 @@ class Trainer:
             loop_info['lloss'].append(loss.item())
 
             ##=== Semi-supervised Training ===
-            iter_unlab_pslab = self.epoch_pslab[idxs[umask]]
-            uloss  = self.unlab_loss(outputs[umask], iter_unlab_pslab)
-            uloss *= self.rampup(self.epoch)*self.usp_weight
-            loss  += uloss; loop_info['uloss'].append(uloss.item())
+            ## mixup pslab loss
+            iter_unlab_pslab = self.epoch_pslab[idxs]
+            mixed_x, y_a, y_b, lam = mixup_two_targets(data, iter_unlab_pslab, 
+                                       self.alpha, self.device, is_bias=False)
+            mixed_outputs = self.model(mixed_x)
+            mix_loss  = self.mixup_loss(mixed_outputs, y_a, y_b, lam)
+            mix_loss *= self.rampup(self.epoch)*self.usp_weight
+            loss += mix_loss; loop_info['aMix'].append(mix_loss.item())
+
             ## update pseudo labels
             with torch.no_grad():
                 pseudo_preds = outputs.clone() if self.soft else outputs.max(1)[1]

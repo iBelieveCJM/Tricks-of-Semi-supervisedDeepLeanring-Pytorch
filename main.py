@@ -30,6 +30,7 @@ build_model = {
     'ictv1': ICTv1.Trainer,
     'ictv2': ICTv2.Trainer,
     'mixmatch': MixMatch.Trainer,
+    'emixpslabv1': eMixPseudoLabelv1.Trainer,
     'emixpslabv2': eMixPseudoLabelv2.Trainer,
 }
 

@@ -38,7 +38,6 @@ class Trainer:
         self.device      = device
         self.epoch       = 0
         self.soft        = config.soft
-        self.unlab_loss  = softmax_loss_mean if self.soft else self.ce_loss
         self.mixup_loss  = mixup_ce_loss_with_softmax #mixup_mse_loss_with_softmax
         if not self.soft: self.mixup_loss = mixup_ce_loss_hard
         

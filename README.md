@@ -36,12 +36,21 @@ I haven't run all models in this repository. Some results of this repo. are show
 
 The following table shows the error rates of the CIFAR10 experiment with 4000 labeled training samples. The parameter settings are the same with the examples in *run.sh*.
 
-|        | iPseudoLabel2013 | ePseudoLabel2013 | iTempens | eTempens | PI    | MeanTeacher | ICT\* | MixMatch |
-|------- | ---------------- | ---------------- | -------- | -------- | ------| ----------- | ----- | -------- |
-|orginal |                  |                  |          | 12.16    | 13.20 | 12.31       | 7.29  | 6.24     |
-| v1     | 20.03            | 12.03            | 10.98    | 10.74    | 14.11 | 10.59       | 7.12  | 6.70     |
-| v2     | 15.82            | 10.82            | 13.53    | 10.24    | 12.89 |  9.46       | 6.74  | 6.89     |
+|        | iPseudoLabel2013 | ePseudoLabel2013 | MeanTeacher | MixMatch |
+|------- | ---------------- | ---------------- | ----------- | -------- |
+|orginal |                  |                  | 12.31       | 6.24     |
+| v1     | 20.03            | 12.03            | 10.59       | 6.70     |
+| v2     | 15.82            | 10.82            |  9.46       | 6.89     |
+|        | iTempens         | eTempens         | PI          | ICT\*    |
+|orginal |                  | 12.16            | 13.20       | 7.29     |
+| v1     | 10.98            | 10.74            | 14.11       | 7.12     |
+| v2     | 13.53            | 10.24            | 12.89       | 6.74     |
 
+
+|        | eMixPseudoLabelv1 | eMixPseudoLabelv2 |
+|------- | ----------------- | ----------------- |
+| soft   | 7.30              | 7.08              |
+| hard   | 7.33              | 7.20              |
 
 Note:
 
