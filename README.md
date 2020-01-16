@@ -57,3 +57,5 @@ Note:
 - The MeanTeacher is the first model of the repository. So the hyper-parameters actually have been tuned for MeanTeacher.
 
 - My ICT is different from original one. The main difference is the unsupervised loss for unlabeled data.
+
+- eMixPseudoLabel is ePseudoLabel2013 with MixUp.
