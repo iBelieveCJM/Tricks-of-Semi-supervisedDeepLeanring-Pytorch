@@ -77,6 +77,7 @@
 ##=== MeanTeacherv2 ===
 # cifar10-4k
 #CUDA_VISIBLE_DEVICES=$1 python main.py --dataset=cifar10 --sup-batch-size=100 --usp-batch-size=100 --label-exclude=False --num-labels=4000 --arch=cnn13 --model=mtv2 --usp-weight=30.0 --ema-decay=0.97 --optim=sgd --epochs=400 --lr=0.1 --momentum=0.9 --weight-decay=5e-4 --nesterov=True --lr-scheduler=cos --min-lr=1e-4 --rampup-length=80 --rampdown-length=50 --data-twice=True --save-freq=100 2>&1 | tee results/mtv2_cifar10-4k_$(date +%y-%m-%d-%H-%M).txt
+CUDA_VISIBLE_DEVICES=$1 python main.py --dataset=cifar10 --sup-batch-size=100 --usp-batch-size=200 --label-exclude=False --num-labels=4000 --arch=cnn13 --model=mtv2 --usp-weight=30.0 --ema-decay=0.97 --optim=sgd --epochs=400 --lr=0.1 --momentum=0.9 --weight-decay=5e-4 --nesterov=True --lr-scheduler=cos --min-lr=1e-4 --rampup-length=80 --rampdown-length=50 --data-twice=True --save-freq=100 2>&1 | tee results/mtv2_cifar10-4k_$(date +%y-%m-%d-%H-%M).txt
 
 
 ##########################################################
@@ -89,6 +90,7 @@
 ##=== ICTv2 ===
 # cifar10-4k
 #CUDA_VISIBLE_DEVICES=$1 python main.py --dataset=cifar10 --sup-batch-size=100 --usp-batch-size=100 --label-exclude=False --num-labels=4000 --arch=cnn13 --model=ictv2 --usp-weight=30.0 --mixup-alpha=1.0 --ema-decay=0.97 --optim=sgd --epochs=400 --lr=0.1 --momentum=0.9 --weight-decay=5e-4 --nesterov=True --lr-scheduler=cos --min-lr=1e-4 --rampup-length=80 --rampdown-length=50 --data-twice=False --save-freq=100 2>&1 | tee results/ictv2_cifar10-4k_$(date +%y-%m-%d-%H-%M).txt
+#CUDA_VISIBLE_DEVICES=$1 python main.py --dataset=cifar10 --sup-batch-size=100 --usp-batch-size=200 --label-exclude=False --num-labels=4000 --arch=cnn13 --model=ictv2 --usp-weight=30.0 --mixup-alpha=1.0 --ema-decay=0.97 --optim=sgd --epochs=400 --lr=0.1 --momentum=0.9 --weight-decay=5e-4 --nesterov=True --lr-scheduler=cos --min-lr=1e-4 --rampup-length=80 --rampdown-length=50 --data-twice=False --save-freq=100 2>&1 | tee results/ictv2_cifar10-4k_$(date +%y-%m-%d-%H-%M).txt
 
 
 ##########################################################
