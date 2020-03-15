@@ -49,6 +49,11 @@ def create_parser():
     parser.add_argument('--t1', type=float, metavar='EPOCHS', help='T1')
     parser.add_argument('--t2', type=float, metavar='EPOCHS', help='T1')
     parser.add_argument('--soft', type=str2bool, help='use soft pseudo label')
+
+    # VAT
+    parser.add_argument('--xi', type=float, metavar='W', help='xi for VAT')
+    parser.add_argument('--eps', type=float, metavar='W', help='epsilon for VAT')
+    parser.add_argument('--n-power', type=int, metavar='N', help='the iteration number of power iteration method in VAT')
     
     # MeanTeacher-based method
     parser.add_argument('--ema-decay', type=float, metavar='W', help='ema weight decay')

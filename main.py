@@ -19,6 +19,7 @@ build_model = {
     'mtv2': MeanTeacherv2.Trainer,
     'piv1': PIv1.Trainer,
     'piv2': PIv2.Trainer,
+    'vatv1': VATv1.Trainer,
     'epslab2013v1': ePseudoLabel2013v1.Trainer,
     'epslab2013v2': ePseudoLabel2013v2.Trainer,
     'ipslab2013v1': iPseudoLabel2013v1.Trainer,
