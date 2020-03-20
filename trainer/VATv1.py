@@ -9,7 +9,6 @@ from pathlib import Path
 from collections import defaultdict
 
 from utils.loss import mse_with_softmax
-from utils.loss import kl_div_with_logit
 from utils.ramps import exp_rampup
 from utils.datasets import decode_label
 from utils.data_utils import NO_LABEL
@@ -65,12 +64,11 @@ class Trainer:
             ## local distributional smoothness (LDS)
             with torch.no_grad():
                 vlogits = outputs.clone().detach()
-                #vlogits = F.softmax(vlogits, dim=1)
+                vlogits = F.softmax(vlogits, dim=1)
             with _disable_tracking_bn_stats(self.model):
                 r_vadv  = self.gen_r_vadv(data, vlogits, self.n_power) 
                 rlogits = self.model(data + r_vadv)
-                #lds  = F.kl_div(F.log_softmax(rlogits,1), vlogits)
-                lds  = kl_div_with_logit(rlogits, vlogits)
+                lds  = F.kl_div(F.log_softmax(rlogits,1), vlogits)
                 lds *= self.rampup(self.epoch)*self.usp_weight
                 loss += lds; loop_info['avat'].append(lds.item())
 
@@ -158,9 +156,8 @@ class Trainer:
         for _ in range(niter):
             d.requires_grad_()
             rlogits = self.model(x + self.xi * d)
-            #rlogits = F.log_softmax(rlogits, dim=1)
-            #adv_dist = F.kl_div(rlogits, vlogits)
-            adv_dist = kl_div_with_logit(rlogits, vlogits)
+            rlogits = F.log_softmax(rlogits, dim=1)
+            adv_dist = F.kl_div(rlogits, vlogits)
             adv_dist.backward()
             d = self.__l2_normalize(d.grad)
             self.model.zero_grad()
