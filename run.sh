@@ -40,7 +40,7 @@
 ##########################################################
 ##=== VATv1 ===
 # cifar10-4k
-CUDA_VISIBLE_DEVICES=$1 python main.py --dataset=cifar10 --sup-batch-size=64 --usp-batch-size=64 --num-labels=4000 --arch=cnn13 --model=vatv1 --xi=10. --eps=0.6 --n-power=1 --usp-weight=30.0 --optim=sgd --epochs=400 --lr=0.1 --momentum=0.9 --weight-decay=5e-4 --nesterov=True --lr-scheduler=cos --min-lr=1e-4 --rampup-length=80 --rampdown-length=50 --data-twice=False --save-freq=0 2>&1 | tee results/vatv1_cifar10-4k_$(date +%y-%m-%d-%H-%M).txt
+CUDA_VISIBLE_DEVICES=$1 python main.py --dataset=cifar10 --sup-batch-size=64 --usp-batch-size=64 --num-labels=4000 --arch=cnn13 --model=vatv1 --xi=10. --eps=5e-6 --n-power=1 --usp-weight=30.0 --drop-ratio=0.5 --optim=sgd --epochs=400 --lr=0.1 --momentum=0.9 --weight-decay=5e-4 --nesterov=True --lr-scheduler=cos --min-lr=1e-4 --rampup-length=80 --rampdown-length=50 --data-twice=False --save-freq=0 2>&1 | tee results/vatv1_cifar10-4k_$(date +%y-%m-%d-%H-%M).txt
 
 ##=== PIv2 ===
 # cifar10-4k
