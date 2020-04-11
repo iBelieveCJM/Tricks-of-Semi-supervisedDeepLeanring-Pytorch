@@ -3,6 +3,7 @@ from . import MeanTeacherv2
 from . import PIv1
 from . import PIv2
 from . import VATv1
+from . import VATv2
 from . import ICTv1
 from . import ICTv2
 from . import ePseudoLabel2013v1

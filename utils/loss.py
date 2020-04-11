@@ -4,10 +4,8 @@ from torch.nn import functional as F
 
 def kl_div_with_logit(input_logits, target_logits):
     assert input_logits.size()==target_logits.size()
-    logits = F.softmax(input_logits, dim=1)
-    qlogq = torch.sum(logits* F.log_softmax(input_logits, dim=1), dim=1)
-    qlogp = torch.sum(logits* F.log_softmax(target_logits, dim=1), dim=1)
-    return torch.mean(qlogq - qlogp)
+    targets = F.softmax(targets_logits, dim=1)
+    return F.kl_div(F.log_softmax(input_logits,1), targets)
 
 def entropy_y_x(logit):
     soft_logit = F.softmax(logit, dim=1)

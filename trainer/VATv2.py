@@ -5,8 +5,10 @@ from torch.nn import functional as F
 import os
 import datetime
 from pathlib import Path
+from itertools import cycle
 from collections import defaultdict
 
+from utils.loss import entropy_y_x
 from utils.loss import mse_with_softmax
 from utils.loss import kl_div_with_logit
 from utils.ramps import exp_rampup
@@ -17,7 +19,7 @@ from utils.data_utils import NO_LABEL
 class Trainer:
 
     def __init__(self, model, optimizer, device, config):
-        print('VAT-v1')
+        print('VAT-v2')
         self.model     = model
         self.optimizer = optimizer
         self.ce_loss   = torch.nn.CrossEntropyLoss(ignore_index=NO_LABEL)
@@ -36,27 +38,29 @@ class Trainer:
         self.eps       = config.eps
         self.n_power   = config.n_power
         
-    def train_iteration(self, data_loader, print_freq):
+    def train_iteration(self, label_loader, unlab_loader, print_freq):
         loop_info = defaultdict(list)
-        label_n, unlab_n = 0, 0
-        for batch_idx, (data, targets) in enumerate(data_loader):
-            data, targets = data.to(self.device), targets.to(self.device)
-            ##=== decode targets ===
-            lmask, umask = self.decode_targets(targets)
-            lbs, ubs = lmask.float().sum().item(), umask.float().sum().item()
+        batch_idx, label_n, unlab_n = 0, 0, 0
+        for (label_x, label_y), (unlab_x, unlab_y) in zip(cycle(label_loader), unlab_loader):
+            label_x, label_y = label_x.to(self.device), label_y.to(self.device)
+            unlab_x, unlab_y = unlab_x.to(self.device), unlab_y.to(self.device)
+            ##=== decode targets of unlabeled data ===
+            self.decode_targets(unlab_y)
+            lbs, ubs = label_x.size(0), unlab_x.size(0)
 
             ##=== forward ===
-            outputs = self.model(data)
-            loss = self.ce_loss(outputs[lmask], targets[lmask])
+            outputs = self.model(label_x)
+            loss = self.ce_loss(outputs, label_y)
             loop_info['lloss'].append(loss.item())
 
             ##=== Semi-supervised Training ===
             ## local distributional smoothness (LDS)
+            unlab_outputs = self.model(unlab_x)
             with torch.no_grad():
-                vlogits = outputs.clone().detach()
+                vlogits = unlab_outputs.clone().detach()
             with disable_tracking_bn_stats(self.model):
-                r_vadv  = self.gen_r_vadv(data, vlogits, self.n_power) 
-                rlogits = self.model(data + r_vadv)
+                r_vadv  = self.gen_r_vadv(unlab_x, vlogits, self.n_power) 
+                rlogits = self.model(unlab_x + r_vadv)
                 lds  = self.cons_loss(rlogits, vlogits)
                 lds *= self.rampup(self.epoch)*self.usp_weight
                 loss += lds; loop_info['avat'].append(lds.item())
@@ -67,14 +71,12 @@ class Trainer:
             self.optimizer.step()
 
             ##=== log info ===
-            label_n, unlab_n = label_n+lbs, unlab_n+ubs
-            lacc = targets[lmask].eq(outputs[lmask].max(1)[1]).float().sum().item()
-            uacc = targets[umask].eq(outputs[umask].max(1)[1]).float().sum().item()
-            loop_info['lacc'].append(lacc)
-            loop_info['uacc'].append(uacc)
+            batch_idx, label_n, unlab_n = batch_idx+1, label_n+lbs, unlab_n+ubs
+            loop_info['lacc'].append(label_y.eq(outputs.max(1)[1]).float().sum().item())
+            loop_info['uacc'].append(unlab_y.eq(unlab_outputs.max(1)[1]).float().sum().item())
             if print_freq>0 and (batch_idx%print_freq)==0:
                 print(f"[train][{batch_idx:<3}]", self.gen_info(loop_info, lbs, ubs))
-        print(f">>>[train]", self.gen_info(loop_info, label_n, unlab_n, False))
+        print(">>>[train]", self.gen_info(loop_info, label_n, unlab_n, False))
         return loop_info, label_n
 
     def test_iteration(self, data_loader, print_freq):
@@ -97,23 +99,23 @@ class Trainer:
         print(f">>>[test]", self.gen_info(loop_info, label_n, unlab_n, False))
         return loop_info, label_n
 
-    def train(self, data_loader, print_freq=20):
+    def train(self, label_loader, unlab_loader, print_freq=20):
         self.model.train()
         with torch.enable_grad():
-            return self.train_iteration(data_loader, print_freq)
+            return self.train_iteration(label_loader, unlab_loader, print_freq)
 
     def test(self, data_loader, print_freq=10):
         self.model.eval()
         with torch.no_grad():
             return self.test_iteration(data_loader, print_freq)
 
-    def loop(self, epochs, train_data, test_data, scheduler=None):
+    def loop(self, epochs, label_data, unlab_data, test_data, scheduler=None):
         best_info, best_acc, n = None, 0., 0
         for ep in range(epochs):
             self.epoch = ep
             if scheduler is not None: scheduler.step()
             print("------ Training epochs: {} ------".format(ep))
-            self.train(train_data, self.print_freq)
+            self.train(label_data, unlab_data, self.print_freq)
             print("------ Testing epochs: {} ------".format(ep))
             info, n = self.test(test_data, self.print_freq)
             acc     = sum(info['lacc']) / n
