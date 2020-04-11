@@ -123,11 +123,6 @@ class Trainer:
                 self.save(ep)
         print(f">>>[best]", self.gen_info(best_info, n, n, False))
 
-    def __l2_normalize2(self, d):
-        d_reshaped = d.view(d.size(0), -1, *(1 for _ in range(d.dim()-2)))
-        d /= torch.norm(d_reshaped, dim=1, keepdim=True) + 1e-8
-        return d
-
     def __l2_normalize(self, d):
         d_abs_max = torch.max(
             torch.abs(d.view(d.size(0),-1)), 1, keepdim=True)[0].view(
