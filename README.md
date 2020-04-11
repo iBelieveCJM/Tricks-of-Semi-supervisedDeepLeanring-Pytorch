@@ -8,9 +8,11 @@ The repository implements following semi-supervised deep learning methods:
 
 - **MeanTeacher**: Mean Teachers are better Role Models (NIPS 2017)
 
+- **VAT**: Virtual Adversarial Training: A Regularization Method for Supervised and Semi-supervised Learning (TPAMI 2018)
+
 - **ICT**: Interpolation Consistency Training for Semi-supervised Learning (IJCAI 2019)
 
-- **MixMatch**: A Holistic Approach to Semi-Supervised Learning (2019)
+- **MixMatch**: A Holistic Approach to Semi-Supervised Learning (NIPS 2019)
 
 This repository was created for my blog [半监督深度学习训练和实现小Tricks](https://zhuanlan.zhihu.com/p/100252944). Therefore the hyper-parameters are set for fair comparision, rather than performance.
 
@@ -52,7 +54,7 @@ The following table shows the error rates of the CIFAR10 experiment with 4000 la
 | soft   | 7.30              | 7.08              |
 | hard   | 7.33              | 7.20              |
 
-Note:
+Notes:
 
 - The MeanTeacher is the first model of the repository. So the hyper-parameters actually have been tuned for MeanTeacher.
 
