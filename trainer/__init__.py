@@ -15,5 +15,7 @@ from . import eTempensv2
 from . import iTempensv1
 from . import iTempensv2
 from . import MixMatch
+from . import iFixMatch
+from . import eFixMatch
 from . import eMixPseudoLabelv1
 from . import eMixPseudoLabelv2

@@ -32,6 +32,8 @@ build_model = {
     'ictv1': ICTv1.Trainer,
     'ictv2': ICTv2.Trainer,
     'mixmatch': MixMatch.Trainer,
+    'ifixmatch': iFixMatch.Trainer,
+    'efixmatch': eFixMatch.Trainer,
     'emixpslabv1': eMixPseudoLabelv1.Trainer,
     'emixpslabv2': eMixPseudoLabelv2.Trainer,
 }
@@ -132,11 +134,10 @@ def run(config):
     if config.save_freq!=0 and not os.path.exists(config.save_dir):
         os.makedirs(config.save_dir)
     ## prepare data
-    data_path = os.path.join(config.data_root, config.dataset)
-    dconfig   = datasets.load[config.dataset](config.num_labels, data_path)
+    dconfig   = datasets.load[config.dataset](config.num_labels)
     if config.model[-1]=='1':
         loaders = create_loaders_v1(**dconfig, config=config)
-    elif config.model[-1]=='2' or config.model=='mixmatch':
+    elif config.model[-1]=='2' or config.model[-5:]=='match':
         loaders = create_loaders_v2(**dconfig, config=config)
     else:
         raise ValueError('No such model: {}'.format(config.model))
@@ -150,7 +151,7 @@ def run(config):
 
     ## run the model
     MTbased = set(['mt', 'ict'])
-    if config.model[:-2] in MTbased or config.model=='mixmatch':
+    if config.model[:-2] in MTbased or config.model[-5:]=='match':
         net2 = arch[config.arch](dconfig['num_classes'], config.drop_ratio)
         net2 = net2.to(device)
         trainer = build_model[config.model](net, net2, optimizer, device, config)

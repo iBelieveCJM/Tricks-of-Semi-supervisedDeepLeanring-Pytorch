@@ -17,7 +17,6 @@ def create_parser():
     parser.add_argument('--num-labels', type=int, metavar='N', help='number of labeled samples')
     parser.add_argument('--sup-batch-size', default=100, type=int, metavar='N', help='batch size for supervised data (default: 100)')
     parser.add_argument('--usp-batch-size', default=100, type=int, metavar='N', help='batch size for unsupervised data (default: 100)')
-    parser.add_argument('--data-root', type=str, metavar='DIR', default='./data-local')
 
     # Data pre-processing
     parser.add_argument('--data-twice', default=False, type=str2bool, metavar='BOOL', help='use two data stream (default: False)')
@@ -54,13 +53,16 @@ def create_parser():
     parser.add_argument('--xi', type=float, metavar='W', help='xi for VAT')
     parser.add_argument('--eps', type=float, metavar='W', help='epsilon for VAT')
     parser.add_argument('--n-power', type=int, metavar='N', help='the iteration number of power iteration method in VAT')
+
+    # Fixmatch
+    parser.add_argument('--threshold', type=float, metavar='W', help='threshold for confident predictions in Fixmatch')
     
     # MeanTeacher-based method
     parser.add_argument('--ema-decay', type=float, metavar='W', help='ema weight decay')
 
     # Mixup-based method
     parser.add_argument('--mixup-alpha', type=float, metavar='W', help='mixup alpha for beta distribution')
- 
+
     # Opt for loss
     parser.add_argument('--usp-weight', default=1.0, type=float, metavar='W', help='the upper of unsuperivsed weight (default: 1.0)')
     parser.add_argument('--weight-rampup', default=30, type=int, metavar='EPOCHS', help='the length of rampup weight (default: 30)')

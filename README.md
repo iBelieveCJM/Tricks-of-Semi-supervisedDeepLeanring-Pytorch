@@ -14,6 +14,8 @@ The repository implements following semi-supervised deep learning methods:
 
 - **MixMatch**: A Holistic Approach to Semi-Supervised Learning (NIPS 2019)
 
+- **FixMatch**: Simplifying Semi-Supervised Learning with Consistency and Confidence (2020)
+
 This repository was created for my blog [半监督深度学习训练和实现小Tricks](https://zhuanlan.zhihu.com/p/100252944). Therefore the hyper-parameters are set for fair comparision, rather than performance.
 
 ### The environment:
@@ -38,15 +40,15 @@ I haven't run all models in this repository. Some results of this repo. are show
 
 The following table shows the error rates of the CIFAR10 experiment with 4000 labeled training samples. The parameter settings are the same with the examples in *run.sh*.
 
-|        | iPseudoLabel2013 | ePseudoLabel2013 | MeanTeacher | MixMatch |
-|------- | ---------------- | ---------------- | ----------- | -------- |
-|orginal |                  |                  | 12.31       | 6.24     |
-| v1     | 20.03            | 12.03            | 10.59       | 6.70     |
-| v2     | 15.82            | 10.82            |  9.46       | 6.89     |
-|        | iTempens         | eTempens         | PI          | ICT\*    |
-|orginal |                  | 12.16            | 13.20       | 7.29     |
-| v1     | 10.98            | 10.74            | 14.11       | 7.12     |
-| v2     | 13.53            | 10.24            | 12.89       | 6.74     |
+|        | iPseudoLabel2013 | ePseudoLabel2013 | MeanTeacher | MixMatch | iFixMatch |
+|------- | ---------------- | ---------------- | ----------- | -------- | --------- |
+|orginal |                  |                  | 12.31       | 6.24     | 4.26      |
+| v1     | 20.03            | 12.03            | 10.59       | 6.70     | 6.63      |
+| v2     | 15.82            | 10.82            |  9.46       | 6.89     | 6.44      |
+|        | iTempens         | eTempens         | PI          | ICT\*    | VAT       |
+|orginal |                  | 12.16            | 13.20       | 7.29     | 11.36     |
+| v1     | 10.98            | 10.74            | 14.11       | 7.12     | 13.84     |
+| v2     | 13.53            | 10.24            | 12.89       | 6.74     | 12.67     |
 
 
 |        | eMixPseudoLabelv1 | eMixPseudoLabelv2 |
@@ -61,3 +63,5 @@ Notes:
 - My ICT is different from original one. The main difference is the unsupervised loss for unlabeled data.
 
 - eMixPseudoLabel is ePseudoLabel2013 with MixUp.
+
+- Instead of KL Divergence, my VAT uses MSE which bring more performance improvement.

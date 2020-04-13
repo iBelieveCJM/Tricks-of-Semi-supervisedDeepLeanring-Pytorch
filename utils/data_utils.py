@@ -32,6 +32,18 @@ class TransformTwice:
         out2 = self.transform(inp)
         return out1, out2
 
+class TransformWeakStrong:
+
+    def __init__(self, trans1, trans2):
+        self.transform1 = trans1
+        self.transform2 = trans2
+
+    def __call__(self, inp):
+        out1 = self.transform1(inp)
+        out2 = self.transform2(inp)
+        return out1, out2
+
+
 class TwoStreamBatchSampler(Sampler):
     """Iterate two sets of indices
     """
